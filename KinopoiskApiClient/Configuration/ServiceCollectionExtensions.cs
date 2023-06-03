@@ -11,6 +11,7 @@ public static class ServiceCollectionExtensions
         services
             .AddSingleton<IKinopoiskApi, KinopoiskApi>()
             .AddSingleton(configuration);
+        
         return services;
     }
 }

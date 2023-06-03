@@ -7,8 +7,8 @@ using Microsoft.Extensions.Configuration;
 
 var configFileName = "appsettings.json";
 var serviceProvider = ConfigureContainer();
-var bar = serviceProvider.GetService<IKinopoiskApi>();
-Console.WriteLine(bar.GetRandomMovie().Name);
+var bar = serviceProvider.GetService<IBot>();
+bar.Run();
 
 
 ServiceProvider ConfigureContainer()
