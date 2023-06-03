@@ -22,14 +22,10 @@ ServiceProvider ConfigureContainer()
         .AddSingleton(botConfig)
         .AddKinopoisk(kinopoiskApiConfig)
         .BuildServiceProvider();
-    
-    
 }
 
 IConfiguration BuildCConfiguration()
 {
-    
-    
     var builder = new ConfigurationBuilder()
         .SetBasePath(Directory.GetCurrentDirectory())
         .AddJsonFile(configFileName, optional: false);

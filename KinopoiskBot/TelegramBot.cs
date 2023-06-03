@@ -10,12 +10,12 @@ public class TelegramBot : IBot
     {
         this.configuration = configuration;
     }
-    
+
     public string GetMessage()
     {
         var botClient = new TelegramBotClient(configuration.Token);
-        
-        var me =  botClient.GetUpdatesAsync().Result[0];
+
+        var me = botClient.GetUpdatesAsync().Result[0];
         return $"Hello, World! I am user {me.Id} and my name is {me.Message} {me.Message.From.Username}.";
     }
 }

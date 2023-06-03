@@ -35,12 +35,12 @@ public class KinopoiskApi : IKinopoiskApi
                 $"Message=[{response.RequestMessage}]"
             );
 
-        var dataStream  = response.Content.ReadAsStream();
+        var dataStream = response.Content.ReadAsStream();
         var reader = new StreamReader(dataStream);
         return reader.ReadToEnd();
     }
 
-    private T? Deserialize<T> (string json)
+    private T? Deserialize<T>(string json)
     {
         return JsonSerializer.Deserialize<T>(json, new JsonSerializerOptions
         {
