@@ -1,4 +1,6 @@
 ﻿using System.Text.Json;
+using KinopoiskApiClient.Configuration;
+using KinopoiskApiClient.Models;
 
 namespace KinopoiskApiClient;
 

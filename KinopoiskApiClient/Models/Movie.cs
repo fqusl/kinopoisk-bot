@@ -1,4 +1,4 @@
-﻿namespace KinopoiskApiClient;
+﻿namespace KinopoiskApiClient.Models;
 
 public class Movie
 {

@@ -1,7 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace KinopoiskApiClient;
+namespace KinopoiskApiClient.Configuration;
 
 public static class ServiceCollectionExtensions
 {

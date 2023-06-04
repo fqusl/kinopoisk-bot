@@ -1,4 +1,7 @@
-﻿namespace KinopoiskApiClient;
+﻿using KinopoiskApiClient;
+using KinopoiskApiClient.Configuration;
+
+namespace KinopoiskBot.Configuration;
 
 public class KinopoiskApiConfiguration : IKinopoiskApiConfiguration
 {

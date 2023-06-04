@@ -1,9 +1,8 @@
 ﻿using System.Text.Json;
 using KinopoiskApiClient;
+using KinopoiskBot.Configuration;
 using KinopoiskBot.View;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
-using Microsoft.Extensions.Options;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;

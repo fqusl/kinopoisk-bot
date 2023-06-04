@@ -1,4 +1,4 @@
-﻿namespace KinopoiskApiClient;
+﻿namespace KinopoiskApiClient.Configuration;
 
 public interface IKinopoiskApiConfiguration
 {

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace KinopoiskBot;
+﻿namespace KinopoiskBot;
 
 public enum BotCommands
 {

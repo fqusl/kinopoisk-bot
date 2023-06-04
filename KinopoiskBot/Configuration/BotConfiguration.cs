@@ -1,4 +1,4 @@
-﻿namespace KinopoiskBot;
+﻿namespace KinopoiskBot.Configuration;
 
 public class BotConfiguration
 {
