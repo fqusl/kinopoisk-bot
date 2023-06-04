@@ -32,12 +32,12 @@ public class TelegramBot : IBot
         };
         var cts = new CancellationTokenSource();
         var cancellationToken = cts.Token;
-
+        
         var commands = new BotCommand[]
         {
             new()
             {
-                Command = "random",
+                Command = BotCommands.Random.ToString(),
                 Description = "Получить случайный фильм"
             }
         };
@@ -60,16 +60,18 @@ public class TelegramBot : IBot
     private async void HandleUpdateAsync(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
-        if (update.Type != UpdateType.Message) return;
+        if (update.Type != UpdateType.Message) 
+            return;
+
         var message = update.Message;
-        if (message.Text.ToLower() == "/start")
+        if (message.Text.ToLower() == $"/{BotCommands.Start.ToString().ToLower()}")
         {
             await client.SendTextMessageAsync(message.Chat,
                 "Этот бот позволяет получать информацию из кинопоиска", cancellationToken: cancellationToken);
             return;
         }
 
-        if (message.Text.ToLower() == "/random")
+        if (message.Text.ToLower() == $"/{BotCommands.Random.ToString().ToLower()}")
         {
             await HandleRandomMovie(botClient, update, cancellationToken);
         }
@@ -80,12 +82,12 @@ public class TelegramBot : IBot
     {
         logger.LogError(JsonSerializer.Serialize(exception.Message));
     }
-
+    
     private async Task HandleRandomMovie(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
         var randomMovie = kinopoiskApi.GetRandomMovie();
-        await Send(botClient, update, $"Слуйчайный фильм:\n{TextView.Convert(randomMovie)}", cancellationToken);
+        await Send(botClient, update, $"Слуйчайный фильм:\n\n{TextView.Convert(randomMovie)}", cancellationToken);
     }
 
     private async Task Send(ITelegramBotClient botClient, Update update, string reply,
