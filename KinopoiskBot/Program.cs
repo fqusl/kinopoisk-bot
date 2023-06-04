@@ -4,6 +4,7 @@ using KinopoiskApiClient;
 using KinopoiskBot;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 var configFileName = "appsettings.json";
 var serviceProvider = ConfigureContainer();
@@ -18,6 +19,7 @@ ServiceProvider ConfigureContainer()
     var kinopoiskApiConfig = GetConfiguration<KinopoiskApiConfiguration>(config);
 
     return new ServiceCollection()
+        .AddLogging(c => c.SetMinimumLevel(LogLevel.Debug).AddConsole())
         .AddSingleton<IBot, TelegramBot>()
         .AddSingleton(botConfig)
         .AddKinopoisk(kinopoiskApiConfig)

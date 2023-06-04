@@ -2,6 +2,8 @@
 using KinopoiskApiClient;
 using KinopoiskBot.View;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
+using Microsoft.Extensions.Options;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
@@ -16,12 +18,12 @@ public class TelegramBot : IBot
     private readonly TelegramBotClient client;
     private readonly ILogger logger;
 
-    public TelegramBot(BotConfiguration configuration, IKinopoiskApi kinopoiskApi)
+    public TelegramBot(BotConfiguration configuration, IKinopoiskApi kinopoiskApi, ILogger<TelegramBot> logger)
     {
         this.configuration = configuration;
         this.kinopoiskApi = kinopoiskApi;
+        this.logger = logger;
         client = new TelegramBotClient(this.configuration.Token);
-        logger = new LoggerFactory().CreateLogger("bot");
     }
 
     public void Run()
@@ -32,7 +34,7 @@ public class TelegramBot : IBot
         };
         var cts = new CancellationTokenSource();
         var cancellationToken = cts.Token;
-        
+
         var commands = new BotCommand[]
         {
             new()
@@ -60,10 +62,13 @@ public class TelegramBot : IBot
     private async void HandleUpdateAsync(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
-        if (update.Type != UpdateType.Message) 
+        if (update.Type != UpdateType.Message)
             return;
 
         var message = update.Message;
+
+        logger.LogDebug($"Received: username=[{update.Message.From.Username}] Text=[{update.Message.Text}]");
+
         if (message.Text.ToLower() == $"/{BotCommands.Start.ToString().ToLower()}")
         {
             await client.SendTextMessageAsync(message.Chat,
@@ -82,7 +87,7 @@ public class TelegramBot : IBot
     {
         logger.LogError(JsonSerializer.Serialize(exception.Message));
     }
-    
+
     private async Task HandleRandomMovie(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
