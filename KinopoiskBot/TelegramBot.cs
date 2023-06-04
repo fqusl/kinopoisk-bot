@@ -1,7 +1,6 @@
 ﻿using System.Text.Json;
 using KinopoiskApiClient;
 using KinopoiskBot.View;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
@@ -33,23 +32,29 @@ public class TelegramBot : IBot
         };
         var cts = new CancellationTokenSource();
         var cancellationToken = cts.Token;
-        
+
+        var commands = new BotCommand[]
+        {
+            new()
+            {
+                Command = "random",
+                Description = "Получить случайный фильм"
+            }
+        };
+
+        Task.Run(() => client.SetMyCommandsAsync(commands, cancellationToken: cancellationToken), cancellationToken);
+
         client.StartReceiving(
             HandleUpdateAsync,
             HandleErrorAsync,
             receiverOptions,
             cancellationToken
         );
-        
+
+
         Console.ReadLine();
 
         cts.Cancel();
-    }
-
-    public string GetMessage()
-    {
-        var me = client.GetUpdatesAsync().Result[0];
-        return $"Hello, World! I am user {me.Id} and my name is {me.Message} {me.Message.From.Username}.";
     }
 
     private async void HandleUpdateAsync(ITelegramBotClient botClient, Update update,
@@ -59,19 +64,34 @@ public class TelegramBot : IBot
         var message = update.Message;
         if (message.Text.ToLower() == "/start")
         {
-            await botClient.SendTextMessageAsync(message.Chat,
-                "Этот бот позволяет получать информацию из кинопоиска");
+            await client.SendTextMessageAsync(message.Chat,
+                "Этот бот позволяет получать информацию из кинопоиска", cancellationToken: cancellationToken);
             return;
         }
 
-        var randomMovie = kinopoiskApi.GetRandomMovie();
-        
-        await botClient.SendTextMessageAsync(message.Chat, $"Слуйчайный фильм:\n{TextView.Convert(randomMovie)}");
+        if (message.Text.ToLower() == "/random")
+        {
+            await HandleRandomMovie(botClient, update, cancellationToken);
+        }
     }
 
     private void HandleErrorAsync(ITelegramBotClient botClient, Exception exception,
         CancellationToken cancellationToken)
     {
         logger.LogError(JsonSerializer.Serialize(exception.Message));
+    }
+
+    private async Task HandleRandomMovie(ITelegramBotClient botClient, Update update,
+        CancellationToken cancellationToken)
+    {
+        var randomMovie = kinopoiskApi.GetRandomMovie();
+        await Send(botClient, update, $"Слуйчайный фильм:\n{TextView.Convert(randomMovie)}", cancellationToken);
+    }
+
+    private async Task Send(ITelegramBotClient botClient, Update update, string reply,
+        CancellationToken cancellationToken)
+    {
+        await botClient.SendTextMessageAsync(update.Message.Chat, reply,
+            cancellationToken: cancellationToken);
     }
 }
