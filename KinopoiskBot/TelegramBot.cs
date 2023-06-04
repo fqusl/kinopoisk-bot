@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using KinopoiskApiClient;
+using KinopoiskBot.View;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot;
@@ -32,13 +33,17 @@ public class TelegramBot : IBot
         };
         var cts = new CancellationTokenSource();
         var cancellationToken = cts.Token;
+        
         client.StartReceiving(
             HandleUpdateAsync,
             HandleErrorAsync,
             receiverOptions,
             cancellationToken
         );
+        
         Console.ReadLine();
+
+        cts.Cancel();
     }
 
     public string GetMessage()
@@ -59,7 +64,9 @@ public class TelegramBot : IBot
             return;
         }
 
-        await botClient.SendTextMessageAsync(message.Chat, kinopoiskApi.GetRandomMovie().Name); //todo
+        var randomMovie = kinopoiskApi.GetRandomMovie();
+        
+        await botClient.SendTextMessageAsync(message.Chat, $"Слуйчайный фильм:\n{TextView.Convert(randomMovie)}");
     }
 
     private void HandleErrorAsync(ITelegramBotClient botClient, Exception exception,
